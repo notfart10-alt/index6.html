@@ -9,13 +9,24 @@
             --bg: #0a0e12;
             --accent: #00d4aa;
             --card: #12171f;
+            --text: #e0f2f1;
+        }
+        [data-theme="blue"] {
+            --bg: #0a0f1a;
+            --accent: #00aaff;
+            --card: #0f1a2a;
+        }
+        [data-theme="dark"] {
+            --bg: #050505;
+            --accent: #00cc99;
+            --card: #1a1a1a;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
             background: var(--bg);
-            color: #e0f2f1;
+            color: var(--text);
             height: 100vh;
             overflow: hidden;
         }
@@ -34,11 +45,7 @@
             color: var(--accent); 
             font-weight: bold; 
         }
-        .choice-buttons {
-            display: flex;
-            gap: 12px;
-            margin: 25px 0;
-        }
+        .choice-buttons { display: flex; gap: 12px; margin: 25px 0; }
         .choice-btn {
             flex: 1;
             padding: 15px;
@@ -53,7 +60,7 @@
             background: var(--accent);
             color: black;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 13px;
             margin: 8px 0;
@@ -76,29 +83,20 @@
         }
         .hidden { display: none !important; }
 
-        /* Huvudlayout efter inloggning */
-        #mainApp {
-            display: none;
-            flex-direction: column;
-            height: 100vh;
-        }
+        /* Huvudlayout */
+        #mainApp { display: none; flex-direction: column; height: 100vh; }
         header {
             background: linear-gradient(to right, #001f1a, #002b24);
             padding: 15px 25px;
             display: flex;
             align-items: center;
         }
-        .content-wrapper {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
+        .content-wrapper { display: flex; flex: 1; overflow: hidden; }
         .sidebar {
             width: 260px;
             background: #0d141b;
             padding: 20px 15px;
             border-right: 1px solid rgba(0,212,170,0.2);
-            overflow-y: auto;
         }
         .nav-btn {
             width: 100%;
@@ -129,7 +127,7 @@
         }
     </style>
 </head>
-<body>
+<body data-theme="default">
 
     <!-- Inloggning -->
     <div class="login-container" id="loginScreen">
@@ -155,14 +153,13 @@
         </div>
     </div>
 
-    <!-- Huvudapplikation -->
+    <!-- Huvudprogram -->
     <div id="mainApp">
         <header>
             <h1 style="margin:0;">Flygradar Sweden</h1>
         </header>
 
         <div class="content-wrapper">
-            <!-- Sidomeny -->
             <div class="sidebar">
                 <button class="nav-btn active" onclick="showPage('hem')">Hem</button>
                 <button class="nav-btn" onclick="showPage('karta')">Karta</button>
@@ -171,7 +168,6 @@
                 <button class="nav-btn" onclick="logout()" style="color:#ff7777;">Logga ut</button>
             </div>
 
-            <!-- Huvudinnehåll -->
             <div class="main-content">
                 <div id="hem" class="page">
                     <h2>Välkommen till Flygradar Sweden</h2>
@@ -191,15 +187,30 @@
                     </audio>
                 </div>
 
+                <!-- Inställningar -->
                 <div id="installningar" class="page hidden">
                     <h2>Inställningar</h2>
-                    <p>Här kan du senare välja karta, tema, etc.</p>
+                    <div style="background:var(--card); padding:25px; border-radius:12px;">
+                        <h3>Kartkälla</h3>
+                        <select id="mapSelect" onchange="changeMap()" style="margin-bottom:25px;">
+                            <option value="https://globe.adsbexchange.com/">ADS-B Exchange</option>
+                            <option value="https://www.flightradar24.com/">Flightradar24</option>
+                        </select>
+
+                        <h3>Tema</h3>
+                        <select id="themeSelect" onchange="changeTheme()">
+                            <option value="default">Standard (Grön)</option>
+                            <option value="blue">Blå Aviation</option>
+                            <option value="dark">Mörk</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 <script>
+    // Inloggningssystem
     function showLogin() {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('registerForm').classList.add('hidden');
@@ -219,16 +230,13 @@
         const user = document.getElementById('regUser').value.trim();
         const pass = document.getElementById('regPass').value.trim();
 
-        if (!email || !user || !pass) {
-            alert("Alla fält måste fyllas i");
-            return;
-        }
+        if (!email || !user || !pass) return alert("Alla fält måste fyllas i");
 
         localStorage.setItem('fr_email', email);
         localStorage.setItem('fr_user', user);
         localStorage.setItem('fr_pass', pass);
 
-        alert("Konto skapat!\n\nDu kan nu logga in med ditt nya konto.");
+        alert("Konto skapat!\n\nDu kan nu logga in.");
         showLogin();
     }
 
@@ -236,10 +244,7 @@
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
 
-        const savedUser = localStorage.getItem('fr_user');
-        const savedPass = localStorage.getItem('fr_pass');
-
-        if (user === savedUser && pass === savedPass && savedUser) {
+        if (user === localStorage.getItem('fr_user') && pass === localStorage.getItem('fr_pass')) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'flex';
             showPage('hem');
@@ -253,17 +258,47 @@
         document.getElementById('mainApp').style.display = 'none';
     }
 
+    // Navigation
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById(page).classList.remove('hidden');
 
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(page));
-        if (activeBtn) activeBtn.classList.add('active');
+        const active = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(page));
+        if (active) active.classList.add('active');
+    }
+
+    // Inställningar
+    function changeMap() {
+        const url = document.getElementById('mapSelect').value;
+        document.getElementById('mapFrame').src = url;
+        localStorage.setItem('selectedMap', url);
+    }
+
+    function changeTheme() {
+        const theme = document.getElementById('themeSelect').value;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('selectedTheme', theme);
+    }
+
+    // Ladda sparade inställningar
+    function loadSettings() {
+        const savedMap = localStorage.getItem('selectedMap');
+        if (savedMap) {
+            document.getElementById('mapFrame').src = savedMap;
+            document.getElementById('mapSelect').value = savedMap;
+        }
+
+        const savedTheme = localStorage.getItem('selectedTheme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeSelect').value = savedTheme;
+        }
     }
 
     // Start
     showLogin();
+    window.onload = loadSettings;
 </script>
 
 </body>
