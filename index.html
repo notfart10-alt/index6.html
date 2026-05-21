@@ -10,15 +10,14 @@
             --accent: #00d4aa;
             --card: #12171f;
         }
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', Arial, sans-serif;
             background: var(--bg);
             color: #e0f2f1;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
         .login-container {
             background: var(--card);
@@ -29,11 +28,11 @@
             text-align: center;
             border: 1px solid rgba(0, 212, 170, 0.2);
         }
-        .logo {
-            font-size: 28px;
-            margin-bottom: 25px;
-            color: var(--accent);
-            font-weight: bold;
+        .logo { 
+            font-size: 28px; 
+            margin-bottom: 25px; 
+            color: var(--accent); 
+            font-weight: bold; 
         }
         .choice-buttons {
             display: flex;
@@ -62,7 +61,6 @@
             border: 1px solid rgba(0,212,170,0.4);
             background: #1e2a36;
             color: white;
-            box-sizing: border-box;
         }
         button {
             width: 100%;
@@ -77,10 +75,63 @@
             margin-top: 10px;
         }
         .hidden { display: none !important; }
+
+        /* Huvudlayout efter inloggning */
+        #mainApp {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background: linear-gradient(to right, #001f1a, #002b24);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+        }
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 260px;
+            background: #0d141b;
+            padding: 20px 15px;
+            border-right: 1px solid rgba(0,212,170,0.2);
+            overflow-y: auto;
+        }
+        .nav-btn {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 6px 0;
+            background: transparent;
+            border: none;
+            color: #b0c4c1;
+            text-align: left;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent);
+            color: black;
+        }
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 85vh;
+            border: none;
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Inloggning -->
     <div class="login-container" id="loginScreen">
         <div class="logo">FLYGRADAR SWEDEN</div>
         <h2>Välkommen</h2>
@@ -90,14 +141,12 @@
             <button class="choice-btn" id="btnRegister" onclick="showRegister()">Skapa konto</button>
         </div>
 
-        <!-- Logga in -->
         <div id="loginForm">
-            <input type="text" id="loginUser" placeholder="Användarnamn" autocomplete="username">
-            <input type="password" id="loginPass" placeholder="Lösenord" autocomplete="current-password">
+            <input type="text" id="loginUser" placeholder="Användarnamn">
+            <input type="password" id="loginPass" placeholder="Lösenord">
             <button onclick="login()">Logga in</button>
         </div>
 
-        <!-- Skapa konto -->
         <div id="registerForm" class="hidden">
             <input type="email" id="regEmail" placeholder="Emailadress">
             <input type="text" id="regUser" placeholder="Användarnamn">
@@ -106,39 +155,45 @@
         </div>
     </div>
 
-    <!-- Huvudsidan efter inloggning -->
-    <div id="mainApp" style="display:none; width:100%; height:100vh; flex-direction:column;">
-        <header style="background: linear-gradient(to right, #001f1a, #002b24); padding:15px 30px; display:flex; align-items:center;">
+    <!-- Huvudapplikation -->
+    <div id="mainApp">
+        <header>
             <h1 style="margin:0;">Flygradar Sweden</h1>
         </header>
 
-        <div style="display:flex; flex:1;">
-            <!-- Meny -->
-            <div style="width:250px; background:#0d141b; padding:20px 15px;">
-                <button onclick="showPage('hem')" style="width:100%; padding:14px; margin:8px 0; background:transparent; border:none; color:#ddd; text-align:left; border-radius:8px;">Hem</button>
-                <button onclick="showPage('karta')" style="width:100%; padding:14px; margin:8px 0; background:transparent; border:none; color:#ddd; text-align:left; border-radius:8px;">Karta</button>
-                <button onclick="showPage('atc')" style="width:100%; padding:14px; margin:8px 0; background:transparent; border:none; color:#ddd; text-align:left; border-radius:8px;">ATC ESOE</button>
-                <button onclick="showPage('installningar')" style="width:100%; padding:14px; margin:8px 0; background:transparent; border:none; color:#ddd; text-align:left; border-radius:8px;">Inställningar</button>
-                <button onclick="logout()" style="width:100%; padding:14px; margin:8px 0; background:transparent; border:none; color:#ff7777; text-align:left; border-radius:8px;">Logga ut</button>
+        <div class="content-wrapper">
+            <!-- Sidomeny -->
+            <div class="sidebar">
+                <button class="nav-btn active" onclick="showPage('hem')">Hem</button>
+                <button class="nav-btn" onclick="showPage('karta')">Karta</button>
+                <button class="nav-btn" onclick="showPage('atc')">ATC ESOE</button>
+                <button class="nav-btn" onclick="showPage('installningar')">Inställningar</button>
+                <button class="nav-btn" onclick="logout()" style="color:#ff7777;">Logga ut</button>
             </div>
 
-            <!-- Innehåll -->
-            <div style="flex:1; padding:30px; overflow:auto;">
-                <div id="hem" class="page"> <h2>Välkommen till Flygradar Sweden</h2> </div>
+            <!-- Huvudinnehåll -->
+            <div class="main-content">
+                <div id="hem" class="page">
+                    <h2>Välkommen till Flygradar Sweden</h2>
+                    <p>Din personliga svenska flyg- och ATC-portal.</p>
+                </div>
+
                 <div id="karta" class="page hidden">
                     <h2>Karta</h2>
-                    <iframe id="mapFrame" src="https://globe.adsbexchange.com/" style="width:100%; height:85vh; border:none; border-radius:12px;"></iframe>
+                    <iframe id="mapFrame" src="https://globe.adsbexchange.com/"></iframe>
                 </div>
+
                 <div id="atc" class="page hidden">
                     <h2>ATC - ESOE Örebro</h2>
-                    <p><strong>Frekvens:</strong> 120.275 MHz</p>
+                    <p><strong>Tower / Approach:</strong> 120.275 MHz</p>
                     <audio controls style="width:100%; margin:20px 0;">
                         <source src="https://livestream.liveatc.net/ESOE" type="audio/mpeg">
                     </audio>
                 </div>
+
                 <div id="installningar" class="page hidden">
                     <h2>Inställningar</h2>
-                    <p>Kommer fler inställningar snart.</p>
+                    <p>Här kan du senare välja karta, tema, etc.</p>
                 </div>
             </div>
         </div>
@@ -173,44 +228,41 @@
         localStorage.setItem('fr_user', user);
         localStorage.setItem('fr_pass', pass);
 
-        alert("Konto skapat framgångsrikt!\n\nDu kan nu logga in.");
+        alert("Konto skapat!\n\nDu kan nu logga in med ditt nya konto.");
         showLogin();
-        
-        // Rensa registerfälten
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regUser').value = '';
-        document.getElementById('regPass').value = '';
     }
 
     function login() {
-        const inputUser = document.getElementById('loginUser').value.trim();
-        const inputPass = document.getElementById('loginPass').value.trim();
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
 
         const savedUser = localStorage.getItem('fr_user');
         const savedPass = localStorage.getItem('fr_pass');
 
-        if (inputUser === savedUser && inputPass === savedPass && savedUser && savedPass) {
+        if (user === savedUser && pass === savedPass && savedUser) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'flex';
             showPage('hem');
         } else {
-            alert("Fel användarnamn eller lösenord.\nKontrollera att du skrivit rätt.");
+            alert("Fel användarnamn eller lösenord");
         }
     }
 
     function logout() {
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('mainApp').style.display = 'none';
-        document.getElementById('loginUser').value = '';
-        document.getElementById('loginPass').value = '';
     }
 
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById(page).classList.remove('hidden');
+
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(page));
+        if (activeBtn) activeBtn.classList.add('active');
     }
 
-    // Startläge
+    // Start
     showLogin();
 </script>
 
