@@ -13,8 +13,8 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100">
 
-    <!-- Inloggningsskärm -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center bg-zinc-950">
+    <!-- Inloggning -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center">
         <div class="bg-zinc-900 p-10 rounded-3xl shadow-2xl w-full max-w-md border border-zinc-700">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold text-emerald-400">Flygradar Sweden</h1>
@@ -22,43 +22,28 @@
             </div>
 
             <div class="flex gap-3 mb-8">
-                <button onclick="showLogin()" id="btnLogin" 
-                        class="flex-1 py-4 rounded-2xl font-medium bg-emerald-500 text-black">Logga in</button>
-                <button onclick="showRegister()" id="btnRegister" 
-                        class="flex-1 py-4 rounded-2xl font-medium border border-zinc-700">Skapa konto</button>
+                <button onclick="showLogin()" id="btnLogin" class="flex-1 py-4 rounded-2xl font-medium bg-emerald-500 text-black">Logga in</button>
+                <button onclick="showRegister()" id="btnRegister" class="flex-1 py-4 rounded-2xl font-medium border border-zinc-700">Skapa konto</button>
             </div>
 
-            <!-- Logga in -->
             <div id="loginForm">
-                <input type="text" id="loginUser" placeholder="Användarnamn" 
-                       class="w-full p-4 bg-zinc-800 rounded-2xl mb-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <input type="password" id="loginPass" placeholder="Lösenord" 
-                       class="w-full p-4 bg-zinc-800 rounded-2xl mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <button onclick="login()" 
-                        class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-2xl font-semibold text-lg">
-                    Logga in
-                </button>
+                <input type="text" id="loginUser" placeholder="Användarnamn" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+                <input type="password" id="loginPass" placeholder="Lösenord" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+                <button onclick="login()" class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-2xl font-semibold">Logga in</button>
             </div>
 
-            <!-- Skapa konto -->
             <div id="registerForm" class="hidden">
-                <input type="email" id="regEmail" placeholder="Emailadress" 
-                       class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
-                <input type="text" id="regUser" placeholder="Användarnamn" 
-                       class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
-                <input type="password" id="regPass" placeholder="Lösenord" 
-                       class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
-                <button onclick="register()" 
-                        class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-2xl font-semibold text-lg">
-                    Skapa konto
-                </button>
+                <input type="email" id="regEmail" placeholder="Emailadress" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+                <input type="text" id="regUser" placeholder="Användarnamn" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+                <input type="password" id="regPass" placeholder="Lösenord" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+                <button onclick="register()" class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-2xl font-semibold">Skapa konto</button>
             </div>
         </div>
     </div>
 
-    <!-- Huvudapplikation -->
+    <!-- Huvudapp -->
     <div id="mainApp" class="hidden flex flex-col h-screen">
-        <header class="bg-zinc-900 border-b border-zinc-700 px-6 py-4 flex items-center">
+        <header class="bg-zinc-900 border-b border-zinc-700 px-6 py-4">
             <h1 class="text-2xl font-bold text-emerald-400">Flygradar Sweden</h1>
         </header>
 
@@ -73,10 +58,10 @@
             </div>
 
             <!-- Innehåll -->
-            <div class="flex-1 p-8 overflow-auto bg-zinc-950">
+            <div class="flex-1 p-8 overflow-auto">
                 <div id="hem" class="page">
                     <h2 class="text-3xl font-bold mb-4">Välkommen tillbaka</h2>
-                    <p class="text-zinc-400">Din personliga flyg- och ATC-portal för Sverige.</p>
+                    <p class="text-zinc-400">Din personliga svenska flygportal.</p>
                 </div>
 
                 <div id="karta" class="page hidden">
@@ -87,17 +72,18 @@
                 <div id="atc" class="page hidden">
                     <h2 class="text-3xl font-bold mb-4">ATC Radio - ESOE Örebro</h2>
                     <div class="bg-zinc-900 p-6 rounded-3xl">
-                        <p class="mb-4"><strong>120.275 MHz</strong> - Tower / Approach</p>
-                        <audio id="atcAudio" controls class="w-full mb-4">
+                        <p class="mb-4"><strong>120.275 MHz</strong> — Tower / Approach</p>
+                        <audio controls class="w-full">
                             <source src="https://livestream.liveatc.net/ESOE" type="audio/mpeg">
                         </audio>
-                        <a href="https://www.liveatc.net/search/?icao=esoe" target="_blank" class="text-emerald-400 hover:underline">Fler feeds på LiveATC</a>
                     </div>
                 </div>
 
+                <!-- Inställningar med Notiser -->
                 <div id="installningar" class="page hidden">
                     <h2 class="text-3xl font-bold mb-6">Inställningar</h2>
-                    <div class="max-w-xl space-y-8">
+                    <div class="max-w-2xl space-y-8">
+
                         <div class="bg-zinc-900 p-6 rounded-3xl">
                             <h3 class="text-xl mb-3">Kartkälla</h3>
                             <select id="mapSelect" onchange="changeMap()" class="w-full p-4 bg-zinc-800 rounded-2xl">
@@ -107,11 +93,14 @@
                         </div>
 
                         <div class="bg-zinc-900 p-6 rounded-3xl">
-                            <h3 class="text-xl mb-3">Tema</h3>
-                            <select id="themeSelect" onchange="changeTheme()" class="w-full p-4 bg-zinc-800 rounded-2xl">
-                                <option value="default">Emerald (Standard)</option>
-                                <option value="blue">Blå</option>
-                            </select>
+                            <h3 class="text-xl mb-3">Notifikationer</h3>
+                            <button onclick="requestNotifications()" 
+                                    class="w-full bg-emerald-600 hover:bg-emerald-500 py-5 rounded-2xl font-medium text-lg">
+                                Aktivera notiser för specialflyg
+                            </button>
+                            <p class="text-sm text-zinc-400 mt-3">
+                                Får notiser när militärflyg, ambulanshelikoptrar eller andra specialflyg är nära din plats (max 5 km).
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +109,6 @@
     </div>
 
 <script>
-    // =============== INLOGGNING ===============
     function showLogin() {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('registerForm').classList.add('hidden');
@@ -132,60 +120,60 @@
     }
 
     function register() {
-        const email = document.getElementById('regEmail').value.trim();
         const user = document.getElementById('regUser').value.trim();
         const pass = document.getElementById('regPass').value.trim();
-
-        if (!user || !pass) {
-            alert("Användarnamn och lösenord måste fyllas i");
-            return;
-        }
-
+        if (!user || !pass) return alert("Användarnamn och lösenord krävs");
+        
         localStorage.setItem('fr_user', user);
         localStorage.setItem('fr_pass', pass);
-        localStorage.setItem('fr_email', email);
-
-        alert("Konto skapat!\n\nDu kan nu logga in.");
+        alert("Konto skapat! Logga in nu.");
         showLogin();
     }
 
     function login() {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value.trim();
-
-        const savedUser = localStorage.getItem('fr_user');
-        const savedPass = localStorage.getItem('fr_pass');
-
-        if (user && pass && user === savedUser && pass === savedPass) {
+        
+        if (user === localStorage.getItem('fr_user') && pass === localStorage.getItem('fr_pass')) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             showPage('hem');
         } else {
-            alert("Fel användarnamn eller lösenord!");
+            alert("Fel användarnamn eller lösenord");
         }
     }
 
     function logout() {
         document.getElementById('mainApp').classList.add('hidden');
         document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('loginUser').value = '';
-        document.getElementById('loginPass').value = '';
     }
 
-    // =============== NAVIGERING ===============
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById(page).classList.remove('hidden');
     }
 
     function changeMap() {
-        const url = document.getElementById('mapSelect').value;
-        document.getElementById('mapFrame').src = url;
+        document.getElementById('mapFrame').src = document.getElementById('mapSelect').value;
     }
 
-    function changeTheme() {
-        // Enkel tema-hantering (kan utökas)
-        console.log("Tema ändrat");
+    // Notiser + Plats
+    function requestNotifications() {
+        if (!("Notification" in window)) {
+            return alert("Din webbläsare stödjer inte notiser.");
+        }
+
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(() => {
+                        alert("✅ Notiser aktiverade!\n\nDu kommer få varningar vid militärflyg, ambulanshelikoptrar m.m. inom 5 km.");
+                    }, () => alert("Platsåtkomst behövs för lokala notiser."));
+                }
+            } else {
+                alert("Notiser nekades.");
+            }
+        });
     }
 
     // Start
