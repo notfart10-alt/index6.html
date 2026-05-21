@@ -5,112 +5,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flygradar Sweden</title>
     <style>
-        body { margin:0; font-family: Arial, sans-serif; background:#0a0a0a; color:#00ffcc; }
-        header { background:#001f1a; padding:15px; text-align:center; }
-        nav { background:#002b24; padding:10px; text-align:center; }
-        nav button { background:#003d33; color:#00ffcc; border:none; padding:12px 20px; margin:5px; border-radius:6px; cursor:pointer; font-size:16px; }
-        nav button:hover, nav button.active { background:#00cc99; color:black; }
-        .content { padding:20px; max-width:1400px; margin:auto; }
-        .hidden { display:none; }
-        iframe { width:100%; height:85vh; border:none; border-radius:8px; }
-        input, button { padding:10px; margin:5px; border-radius:5px; }
-        .login { text-align:center; padding:100px 20px; }
+        :root {
+            --bg: #0a0e12;
+            --accent: #00d4aa;
+            --card: #12171f;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: #e0f2f1;
+        }
+        header {
+            background: linear-gradient(135deg, #001f1a, #00332b);
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 212, 170, 0.2);
+        }
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        .sidebar {
+            width: 220px;
+            background: #0f161d;
+            padding: 20px 10px;
+            border-right: 1px solid #00d4aa33;
+        }
+        .nav-btn {
+            width: 100%;
+            padding: 14px 20px;
+            margin: 6px 0;
+            background: transparent;
+            border: none;
+            color: #b0c4c1;
+            text-align: left;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: #00d4aa;
+            color: black;
+        }
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        iframe {
+            width: 100%;
+            height: 82vh;
+            border: none;
+            border-radius: 12px;
+        }
+        .hidden { display: none !important; }
+        input, select, button {
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #00d4aa55;
+            background: #1e2a36;
+            color: white;
+        }
+        button {
+            background: var(--accent);
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10,14,18,0.98);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>✈️ Flygradar Sweden</h1>
-</header>
-
-<nav id="navbar" class="hidden">
-    <button onclick="showPage('hem')">Hem</button>
-    <button onclick="showPage('karta')">Karta</button>
-    <button onclick="showPage('atc')">ATC ESOE</button>
-    <button onclick="showPage('installningar')">Inställningar</button>
-    <button onclick="logout()" style="background:#660000;">Logga ut</button>
-</nav>
-
-<div class="content">
-
-    <!-- Inloggning -->
-    <div id="login" class="login">
-        <h2>Logga in till Flygradar Sweden</h2>
+<div class="login-screen" id="loginScreen">
+    <div class="card" style="width:320px; text-align:center;">
+        <h2>✈️ Flygradar Sweden</h2>
+        <p>Logga in för att fortsätta</p>
         <input type="text" id="username" placeholder="Användarnamn" value="admin"><br>
         <input type="password" id="password" placeholder="Lösenord" value="1234"><br><br>
-        <button onclick="login()">Logga in</button>
-        <p><small>(Standard: admin / 1234)</small></p>
+        <button onclick="login()" style="width:100%; padding:12px;">Logga in</button>
+        <small>Standard: admin / 1234</small>
+    </div>
+</div>
+
+<header>
+    <h1>Flygradar Sweden</h1>
+</header>
+
+<div class="container hidden" id="mainApp">
+
+    <!-- Sidomeny -->
+    <div class="sidebar">
+        <button class="nav-btn active" onclick="showPage('hem')">🏠 Hem</button>
+        <button class="nav-btn" onclick="showPage('karta')">🗺️ Karta</button>
+        <button class="nav-btn" onclick="showPage('atc')">🎙️ ATC ESOE</button>
+        <button class="nav-btn" onclick="showPage('installningar')">⚙️ Inställningar</button>
+        <button class="nav-btn" onclick="logout()" style="color:#ff6666;">🚪 Logga ut</button>
     </div>
 
-    <!-- Hem -->
-    <div id="hem" class="page">
-        <h2>Välkommen till Flygradar Sweden</h2>
-        <p>Din lokala svenska flyg- och ATC-portal.</p>
-        <p>Använd menyn ovan för att navigera.</p>
-    </div>
+    <!-- Huvudinnehåll -->
+    <div class="main">
 
-    <!-- Karta -->
-    <div id="karta" class="page hidden">
-        <h2>📍 Live Karta (ADS-B Exchange)</h2>
-        <iframe src="https://globe.adsbexchange.com/" allowfullscreen></iframe>
-    </div>
+        <!-- Hem -->
+        <div id="hem" class="page">
+            <h2>Välkommen till Flygradar Sweden</h2>
+            <div class="card">
+                <p>Din personliga svenska flygövervakning.</p>
+                <p>Använd menyn till vänster för att navigera.</p>
+            </div>
+        </div>
 
-    <!-- ATC ESOE -->
-    <div id="atc" class="page hidden">
-        <h2>🎙️ ATC - ESOE Örebro</h2>
-        <h3>Orebro Tower / Control</h3>
-        <p>Frekvens: 120.275 MHz & 120.280 MHz</p>
-        
-        <audio controls style="width:100%; max-width:600px;">
-            <source src="https://livestream.liveatc.net/ESOE" type="audio/mpeg">
-            Din webbläsare stödjer inte ljud.
-        </audio>
-        
-        <p><small>Om ljudet inte fungerar → <a href="https://www.liveatc.net/search/?icao=esoe" target="_blank" style="color:#00ffcc;">Öppna LiveATC för ESOE</a></small></p>
-    </div>
+        <!-- Karta -->
+        <div id="karta" class="page hidden">
+            <h2>🗺️ Live Karta</h2>
+            <div class="card">
+                <iframe id="mapFrame" src="https://globe.adsbexchange.com/" allowfullscreen></iframe>
+            </div>
+        </div>
 
-    <!-- Inställningar -->
-    <div id="installningar" class="page hidden">
-        <h2>⚙️ Inställningar</h2>
-        <p>Här kan du senare lägga till egna länkar, ändra lösenord osv.</p>
-        <p><strong>Tips:</strong> Ersätt kartan med Flightradar24 eller din egen tar1090 om du vill.</p>
-    </div>
+        <!-- ATC ESOE -->
+        <div id="atc" class="page hidden">
+            <h2>🎙️ ATC - ESOE Örebro</h2>
+            <div class="card">
+                <h3>Örebro Airport</h3>
+                <p><strong>Tower / Approach:</strong> 120.275 MHz</p>
+                
+                <audio controls style="width:100%; margin:15px 0;">
+                    <source src="https://livestream.liveatc.net/ESOE" type="audio/mpeg">
+                </audio>
+                
+                <p><a href="https://www.liveatc.net/search/?icao=esoe" target="_blank" style="color:var(--accent);">Öppna alla ESOE-feeds på LiveATC →</a></p>
+            </div>
+        </div>
 
+        <!-- Inställningar -->
+        <div id="installningar" class="page hidden">
+            <h2>⚙️ Inställningar</h2>
+            <div class="card">
+                <h3>Välj kartkälla</h3>
+                <select id="mapSelect" onchange="changeMap()">
+                    <option value="https://globe.adsbexchange.com/">ADS-B Exchange (rekommenderas)</option>
+                    <option value="https://www.flightradar24.com/">Flightradar24</option>
+                </select>
+                
+                <p><small>Ändringen gäller direkt på Karta-sidan.</small></p>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
-    let isLoggedIn = false;
+    let currentPage = 'hem';
 
     function login() {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
         
         if (user && pass) {
-            isLoggedIn = true;
-            document.getElementById('login').classList.add('hidden');
-            document.getElementById('navbar').classList.remove('hidden');
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('hidden');
             showPage('hem');
         } else {
-            alert("Fyll i användarnamn och lösenord");
+            alert("Ange användarnamn och lösenord");
         }
     }
 
     function logout() {
-        isLoggedIn = false;
-        document.getElementById('navbar').classList.add('hidden');
-        document.getElementById('login').classList.remove('hidden');
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('mainApp').classList.add('hidden');
     }
 
     function showPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById(page).classList.remove('hidden');
         
-        // Markera aktiv knapp
-        document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+        // Aktiv knapp
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        const buttons = document.querySelectorAll('.nav-btn');
+        for (let btn of buttons) {
+            if (btn.getAttribute('onclick').includes("'" + page + "'")) {
+                btn.classList.add('active');
+                break;
+            }
+        }
     }
 
-    // Enter-tangent för inlogg
-    document.getElementById('password').addEventListener("keypress", function(e) {
+    function changeMap() {
+        const url = document.getElementById('mapSelect').value;
+        document.getElementById('mapFrame').src = url;
+    }
+
+    // Enter för inloggning
+    document.getElementById('password').addEventListener("keypress", e => {
         if (e.key === "Enter") login();
     });
 </script>
